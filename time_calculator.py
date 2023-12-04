@@ -1,69 +1,100 @@
-def add_time(start, duration, day=" "):
+def add_time(start, duration, *day):
+  #initialization of dayInfo
+  dayInfo = ""
+  nextDay = 0 
+  f = 0
 
-  dayinfo = ""
-  
+  #Start time divided to hourStart, minuteStart, meridiem
   timeStart, meridiem = start.split()
   hourStart, minuteStart = timeStart.split(":")
   
+  #Duration time divided to hourDuration, minuteDuraton
   hourDuration, minuteDuration = duration.split(":")
-
+  meridiem = str(meridiem)
   #DEBUG1
-  new_time = str(hourStart) + ":" + str(minuteStart) + " " + meridiem
-  print(new_time)
+  current_time = str(hourStart) + ":" + str(minuteStart) + " " + meridiem
+  print("current time:")
+  print(current_time)
   print("hourDuration:")
   print(hourDuration)
   print("minuteDuration:")
   print(minuteDuration)
+  print(day)
 
-  hourEnd = int(hourStart) + int(hourDuration)
-  minutEnd = int(minuteStart) + int(minuteDuration)
+  hourDuration = int(hourDuration) 
+  minuteDuration = int(minuteDuration)
 
-  if(minutEnd>60):
-    hourEnd += minutEnd//60
-    minutEnd = minutEnd - 60
+  if(minuteDuration>60):
+    hourDuration += minuteDuration//60
+    minuteDuration = minuteDuration - (60 * (minuteDuration//60))
 
-  if(hourEnd>12):
-    hourEnd = hourEnd - 12
-    meridiem = "PM"
-  else:
-    meridiem = "AM"
+  hourEnd = int(hourStart) + hourDuration
+  minutEnd = int(minuteStart) + minuteDuration
+  
+  if(minutEnd >= 60):
+    hourEnd = hourEnd + 1
+    minutEnd = minutEnd - (60 * (minutEnd//60))
+ 
+  if(hourEnd > 24):
+   f = hourEnd // 24
+   hourEnd = hourEnd - (f * 24) 
+   nextDay = f
+
+  if(hourEnd == 12):
+    if(meridiem == "AM"):
+      print("działa")
+      if(hourEnd != 12): hourEnd = hourEnd - 12
+      meridiem = 'PM'
+      print(meridiem)
+    elif(meridiem == 'PM'):
+      meridiem = 'AM'
+      #hourEnd = hourEnd - 12
+      print("działa2")
+      nextDay += 1
+  elif(hourEnd > 12):
+    if(meridiem == 'AM'):
+        if(hourEnd != 12): hourEnd = hourEnd - 12
+        meridiem = 'PM'
+    elif(meridiem == 'PM'):
+        meridiem = 'AM'
+        if(hourEnd != 12): hourEnd = hourEnd - 12
+        nextDay += 1
+    
 
   print("f: ")
+  print(f)
   
-  if hourEnd>12 or meridiem=="PM":
-    dayinfo = "(next day)"
-    meridiem = "AM"
-    f=hourEnd//24
-    print(f)
-    if(f>0):
-      dayinfo = "(" + str(f) + " days later)"
-      hourEnd = int(hourStart) + int(hourDuration) - (f * 24)
-      print("houedn")
-      print(hourEnd)
-      if hourEnd>12 and meridiem=="PM":
-        hourEnd = hourEnd - 12
-        meridiem = "AM"
-        f = f + 1
-      if hourEnd>12 and meridiem=="AM":
-        hourEnd = hourEnd - 12
-        meridiem = "PM"
-      dayinfo = "(" + str(f) + " days later)"
-    
+  if(nextDay == 1):
+    dayInfo = "Next day"
+  else:
+    dayInfo = str(nextDay) + " days later"
+
 
   if(minutEnd<10):
     minutEnd = "0" + str(minutEnd)
     
-  #print(hourEnd)
-  print("minutEnd")
-  print(minutEnd)
-  
-  new_time = str(hourEnd) + ":" + str(minutEnd) + " " + meridiem + " " + dayinfo
+  new_time = str(hourEnd) + ":" + str(minutEnd) + " " + meridiem + " " + str(dayInfo)
   print("Exit time:")
   print(new_time)
 
+  print("=====================================================")
   return new_time
 
-add_time("3:00 AM", "60:10")
-#add_time("11:43 AM", "00:20")
-#add_time("10:10 PM", "3:30")
-#add_time("11:30 AM", "20:32", "Monday")
+
+add_time("3:00 PM", "3:10")
+# Returns: 6:10 PM
+
+add_time("11:30 AM", "2:32", "Monday")
+# Returns: 2:02 PM, Monday
+
+add_time("11:43 AM", "00:20")
+# Returns: 12:03 PM
+
+add_time("10:10 PM", "3:30")
+# Returns: 1:40 AM (next day)
+
+add_time("11:43 PM", "24:20", "tueSday")
+# Returns: 12:03 AM, Thursday (2 days later)
+
+add_time("6:30 PM", "205:12")
+# Returns: 7:42 AM (9 days later)
