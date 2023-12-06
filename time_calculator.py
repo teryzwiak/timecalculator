@@ -1,9 +1,19 @@
-def add_time(start, duration, *day):
+def add_time(start, duration, day=None):
   #initialization of dayInfo
   dayInfo = ""
   nextDay = 0 
   f = 0
+  days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
 
+  if(day==None):
+    day = ""
+  else:
+    day = day.lower()
+    day = day.strip()
+    day = day[0].capitalize() + day[1:]
+    intday = days["Monday"]
+    print(intday)
+  
   #Start time divided to hourStart, minuteStart, meridiem
   timeStart, meridiem = start.split()
   hourStart, minuteStart = timeStart.split(":")
@@ -11,6 +21,7 @@ def add_time(start, duration, *day):
   #Duration time divided to hourDuration, minuteDuraton
   hourDuration, minuteDuration = duration.split(":")
   meridiem = str(meridiem)
+
   #DEBUG1
   current_time = str(hourStart) + ":" + str(minuteStart) + " " + meridiem
   print("current time:")
@@ -42,14 +53,10 @@ def add_time(start, duration, *day):
 
   if(hourEnd == 12):
     if(meridiem == "AM"):
-      print("działa")
       if(hourEnd != 12): hourEnd = hourEnd - 12
       meridiem = 'PM'
-      print(meridiem)
     elif(meridiem == 'PM'):
       meridiem = 'AM'
-      #hourEnd = hourEnd - 12
-      print("działa2")
       nextDay += 1
   elif(hourEnd > 12):
     if(meridiem == 'AM'):
@@ -63,17 +70,18 @@ def add_time(start, duration, *day):
 
   print("f: ")
   print(f)
-  
-  if(nextDay == 1):
-    dayInfo = "Next day"
+  if(nextDay == 0):
+    dayInfo = ""
+  elif(nextDay == 1):
+    dayInfo = " (next day)"
   else:
-    dayInfo = str(nextDay) + " days later"
+    dayInfo = " (" + str(nextDay) + " days later)"
 
 
   if(minutEnd<10):
     minutEnd = "0" + str(minutEnd)
     
-  new_time = str(hourEnd) + ":" + str(minutEnd) + " " + meridiem + " " + str(dayInfo)
+  new_time = str(hourEnd) + ":" + str(minutEnd) + " " + meridiem + str(dayInfo)
   print("Exit time:")
   print(new_time)
 
