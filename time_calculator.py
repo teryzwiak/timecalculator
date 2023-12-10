@@ -2,17 +2,11 @@ def add_time(start, duration, day=None):
   #initialization of dayInfo
   dayInfo = ""
   nextDay = 0 
+  intday = 0
   f = 0
   days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
 
-  if(day==None):
-    day = ""
-  else:
-    day = day.lower()
-    day = day.strip()
-    day = day[0].capitalize() + day[1:]
-    intday = days["Monday"]
-    print(intday)
+  
   
   #Start time divided to hourStart, minuteStart, meridiem
   timeStart, meridiem = start.split()
@@ -70,6 +64,19 @@ def add_time(start, duration, day=None):
 
   print("f: ")
   print(f)
+
+  if(day==None):
+    day = ""
+  else:
+    day = day.lower()
+    day = day.strip()
+    day = day[0].capitalize() + day[1:]
+    intday = days.index(day)
+    print(intday)
+    intday = intday + ((intday + f)%7)
+    day = days[intday]
+    day = ", " + day
+
   if(nextDay == 0):
     dayInfo = ""
   elif(nextDay == 1):
@@ -81,7 +88,7 @@ def add_time(start, duration, day=None):
   if(minutEnd<10):
     minutEnd = "0" + str(minutEnd)
     
-  new_time = str(hourEnd) + ":" + str(minutEnd) + " " + meridiem + str(dayInfo)
+  new_time = str(hourEnd) + ":" + str(minutEnd) + " " + meridiem + day + str(dayInfo)
   print("Exit time:")
   print(new_time)
 
